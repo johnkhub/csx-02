@@ -1,0 +1,37 @@
+
+server:
+  servlet:
+      context-path: /csx
+  port: 8090
+
+spring:
+  application:
+    name: csx-app
+  profiles:
+     active: dev #spring.profiles.active#
+    #group:
+      #dev:
+        #- dev
+        #-
+####spring.liquibase.change-log=classpath:/db/changelog/db.changelog-master.xml
+### I added this it worked
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    open-in-view: false
+    properties:
+       hibernate:
+         show_sql: false
+         hibernate:
+           format_sql: true
+         jdbc.lob.non_contextual_creation: true
+
+    hibernate:
+       ddl-auto:  update
+       ###globally_quoted_identifiers: true
+
+springdoc:
+  swagger-ui:
+   disable-swagger-default-url: true
+# to view in browser
+# http://localhost:8090/csx/swagger-ui/index.html

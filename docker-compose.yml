@@ -1,0 +1,72 @@
+
+version: '3'
+
+services:
+
+  #
+  csx-postgres-server:
+    build: ./csx-postgres
+    container_name: csx-postgres
+    volumes:
+      - csx-postgres-volume:/var/lib/postgresql/data
+    ports:
+      - "5422:5432" # 5433 to avoid conflict with local postgres
+    environment:
+      - POSTGRES_DB=csx-db
+      - POSTGRES_USER=csx-user  #csx-user
+      - POSTGRES_PASSWORD=csx-pw  #csx-pw
+
+  #
+  csx-app:
+    build: ./csx-app
+    container_name: csx-app
+    restart: always
+    environment:
+      - DB_SERVER=csx-postgres-server
+      - POSTGRES_DB=csx-db
+      - POSTGRES_USER=csx-user  #csx-user
+      - POSTGRES_PASSWORD=csx-pw  #csx-pw
+    ports:
+      - "8090:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    links:
+      - csx-postgres-server
+
+  #
+  csx-pgadmin:
+    image: dpage/pgadmin4
+    logging:
+      driver: none
+    container_name: csx-pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=johnkatanga777@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=sera
+      #############- PGADMIN_LISTEN_PORT= 80
+    ports:
+      - "8680:80"
+    volumes:
+      - pgadmin-volume:/var/lib/pgadmin
+
+  #------- To access PgAdmin4, localhost:8086 (email and pw here)
+  #Create server:
+  #name=csx-postgres-server, host=csx-postgres-server, port=5432, maintenance table=postgres, username=csx-user
+  #----------To access from DBeaver
+  #host=localhost, database=csx-db, port=543, authentication=database native, username=csx-user, password=csx-pw
+
+  #Fron-end Angular Application
+  csx-ui:
+     image: uiui
+     build: ./csx-web
+     container_name: csx-ui
+     ports:
+       - "80:80"
+       #- "4200:80"
+     depends_on:
+       - csx-app
+
+  #--- To view the UI, localhost:80 or localhost
+
+
+#Volumes for DB data
+volumes:
+  csx-postgres-volume:
+  pgadmin-volume:

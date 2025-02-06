@@ -1,0 +1,49 @@
+
+server:
+  servlet:
+      context-path: /csx
+  port: 8090
+
+spring:
+  application:
+    name: jhaaa
+  profiles:
+    # The commented value for `active` can be replaced with valid Spring profiles to load.
+    # Otherwise, it will be filled in by maven when building the JAR file
+    # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
+    active: #spring.profiles.active#
+    group:
+      dev:
+        - dev
+        -
+spring:
+  #datasource.url: jdbc:postgresql://${DB_SERVER}/${POSTGRES_DB}
+  #datasource:
+     #username: ${POSTGRES_USER}
+     #password: ${POSTGRES_PASSWORD}
+  datasource:
+      url: jdbc:postgresql://localhost:5432/csx-db
+      username: postgres
+      password: sera
+####spring.liquibase.change-log=classpath:/db/changelog/db.changelog-master.xml
+### I added this it worked
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    open-in-view: false
+    properties:
+       hibernate:
+         show_sql: false
+         hibernate:
+           format_sql: true
+         jdbc.lob.non_contextual_creation: true
+
+    hibernate:
+       ddl-auto:  update
+       globally_quoted_identifiers: true
+
+springdoc:
+  swagger-ui:
+   disable-swagger-default-url: true
+# to view in browser
+# http://localhost:8090/csx/swagger-ui/index.html
